@@ -1,15 +1,14 @@
 package routers
 
 import (
+	"blog/controllers"
 	"github.com/gin-gonic/gin"
 )
 
 func AdminRouter(c *gin.RouterGroup) {
-	//permissionMiddleware := middlewares.PermissionMiddleware()
-
-	//postGroup := c.Group("/post")
-	//{
-	//	postGroup.GET("/:id", controllers.GetPosts)
-	//	postGroup.POST("/", permissionMiddleware, controllers.CreatePost)
-	//}
+	adminGroup := c.Group("/admin")
+	{
+		adminGroup.POST("/login", controllers.Login)
+		adminGroup.POST("/register", controllers.Register)
+	}
 }

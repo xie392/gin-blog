@@ -1,13 +1,13 @@
-- database:
+database:
     host: localhost
     port: 3306
     username: root
     password: 123456
     database: blog
 
-- redis:
+redis:
     host: localhost
     port: 6379
     password: 123456
 
-- jwt_secret: w3bK3yS3cr3tK3y
+jwt_secret: "secret_key_as_bytes"

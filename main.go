@@ -7,11 +7,12 @@ import (
 )
 
 func main() {
+	configs.InitConfig()
 	var router = routers.SetupRouter()
 	err := router.Run(":8080")
 	if err != nil {
 		return
 	}
-	configs.InitConfig()
+
 	fmt.Println("Server is running on: http://localhost:8080")
 }

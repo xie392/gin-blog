@@ -2,18 +2,20 @@ package utils
 
 import (
 	"blog/configs"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
 
 type Claims struct {
-	UserID string `json:"user_id"`
+	UserID int `json:"id"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(userID string) (string, error) {
-	config, err := configs.GetConfig()
+func GenerateToken(userID int) (string, error) {
+	cfg, err := configs.GetConfig()
 	if err != nil {
+		fmt.Println("Error while getting config", err)
 		return "", err
 	}
 
@@ -31,7 +33,7 @@ func GenerateToken(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// 使用密钥进行签名并获取字符串格式的令牌
-	tokenString, err := token.SignedString(config.JwtSecret)
+	tokenString, err := token.SignedString([]byte(cfg.JWTSecret))
 	if err != nil {
 		return "", err
 	}
@@ -40,14 +42,14 @@ func GenerateToken(userID string) (string, error) {
 }
 
 func ParseToken(tokenString string) (*Claims, error) {
-	config, err := configs.GetConfig()
+	cfg, err := configs.GetConfig()
 	if err != nil {
 		return nil, err
 	}
 
 	// 解析 JWT 字符串
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return config.JwtSecret, nil
+		return []byte(cfg.JWTSecret), nil
 	})
 	if err != nil {
 		return nil, err

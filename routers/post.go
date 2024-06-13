@@ -8,10 +8,12 @@ import (
 
 func PostRouter(c *gin.RouterGroup) {
 	permissionMiddleware := middlewares.PermissionMiddleware()
-
 	postGroup := c.Group("/post")
 	{
-		postGroup.GET("/:id", controllers.GetPosts)
+		postGroup.GET("", controllers.GetAllPosts)
+		postGroup.GET("/:id", controllers.GetPost)
 		postGroup.POST("/", permissionMiddleware, controllers.CreatePost)
+		postGroup.PUT("/:id", permissionMiddleware, controllers.UpdatePost)
+		postGroup.DELETE("/:id", permissionMiddleware, controllers.DeletePost)
 	}
 }

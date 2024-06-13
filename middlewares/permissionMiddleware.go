@@ -1,19 +1,32 @@
 package middlewares
 
-import "github.com/gin-gonic/gin"
+import (
+	"blog/utils"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 func PermissionMiddleware() gin.HandlerFunc {
-	// 在这里编写权限中间件的代码
 	return func(c *gin.Context) {
-		// 在这里进行JWT身份验证
-		// 如果验证失败，则返回未授权的响应
-		// 如果验证成功，则继续执行下一个处理程序
-		// 示例代码：
-		// if 验证失败 {
-		//     c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权"})
-		//     c.Abort()
-		//     return
-		// }
+		tokenString := c.GetHeader("Authorization")
+		if tokenString == "" {
+			utils.ErrorResponse(c, http.StatusUnauthorized, "未提供认证信息")
+			c.Abort()
+			return
+		}
+
+		token, err := utils.ParseToken(tokenString)
+		if err != nil {
+			utils.ErrorResponse(c, http.StatusUnauthorized, "认证信息无效")
+			c.Abort()
+			return
+		}
+
+		c.Set("user_id", token)
+
+		fmt.Println("Authorization:", token)
+
 		c.Next()
 	}
 }
