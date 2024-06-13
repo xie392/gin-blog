@@ -8,20 +8,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetUser(username, password string) (models.Admin, error) {
+func GetUser(username, password string) (models.AdminResponse, error) {
 	var admin models.Admin
 	if err := configs.DB.Where("username = ? AND password = ?", username, password).First(&admin).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return models.Admin{}, errors.New("找不到该用户")
+			return models.AdminResponse{}, errors.New("找不到该用户")
 		}
-		return models.Admin{}, err
+		return models.AdminResponse{}, err
 	}
 	token, err := utils.GenerateToken(admin.ID)
 	if err != nil {
-		return models.Admin{}, err
+		return models.AdminResponse{}, err
 	}
-	admin.Token = token
-	return admin, nil
+	result := models.AdminResponse{
+		ID:       admin.ID,
+		Username: admin.Username,
+		Token:    token,
+	}
+	return result, nil
 }
 
 func CreateUser(user models.Admin) (models.Admin, error) {

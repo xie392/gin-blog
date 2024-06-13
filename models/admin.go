@@ -6,6 +6,11 @@ type Admin struct {
 	ID       int    `json:"id" gorm:"primaryKey;autoIncrement"`
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type AdminResponse struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
 	Token    string `json:"token,omitempty"`
 }
 
